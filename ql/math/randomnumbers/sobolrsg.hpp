@@ -124,13 +124,29 @@ namespace QuantLib {
 
         const SobolRsg::sample_type& nextSequence() const {
             const std::vector<boost::uint_least32_t>& v = nextInt32Sequence();
-            // normalize to get a double in (0,1)
-            for (Size k=0; k<dimensionality_; ++k)
-                sequence_.value[k] = v[k] * normalizationFactor_;
+			//********************************************************************************************************************************************************
+			//DERISCOPE: Added the technique of digital shift as explained in the comments by the digitalShift_ below
+			if( digitalShift_ != 0 ) {
+				std::vector<boost::uint_least32_t> shifted_v(v);//use a separate copy so that v is not modified
+				for (Size k=0; k<dimensionality_; ++k) {
+					shifted_v[k] ^= digitalShift_;
+					sequence_.value[k] = shifted_v[k] * normalizationFactor_;
+				}
+			}
+			else {
+			//********************************************************************************************************************************************************
+				// normalize to get a double in (0,1)
+				for (Size k=0; k<dimensionality_; ++k)
+					sequence_.value[k] = v[k] * normalizationFactor_;
+			}
             return sequence_;
         }
         const sample_type& lastSequence() const { return sequence_; }
         Size dimension() const { return dimensionality_; }
+		//********************************************************************************************************************************************************
+		//DERISCOPE: Added in relation to digitalShift_. See comments below.
+		void setDigitalShift( unsigned long x ) { digitalShift_ = x; }
+		//********************************************************************************************************************************************************
       private:
         static const int bits_;
         static const double normalizationFactor_;
@@ -140,6 +156,13 @@ namespace QuantLib {
         mutable sample_type sequence_;
         mutable std::vector<boost::uint_least32_t> integerSequence_;
         std::vector<std::vector<boost::uint_least32_t> > directionIntegers_;
+		//********************************************************************************************************************************************************
+		//DERISCOPE: Added in order to alter nextInt32Sequence() so that it returns a "shifted" integer by XORing the original integer with the number here.
+		//This number must be set by the client through setDigitalShift() to a random integer.
+		//This technique (RQMC pr Randomized Quasi Monte Carlo) is used in the error estimation of the sobol result.
+		//Details at https://people.cs.kuleuven.be/~dirk.nuyens/taiwan/QMC-practical-guide-20161107-1up.pdf
+		unsigned long digitalShift_;
+		//********************************************************************************************************************************************************
     };
 
 }

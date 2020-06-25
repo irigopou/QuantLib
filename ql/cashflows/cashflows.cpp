@@ -848,9 +848,15 @@ namespace QuantLib {
 #endif
 
         Real npv = 0.0;
-        DiscountFactor discount = 1.0;
+		//********************************************************************************************************************
+		//The following line was commented out by me
+//        DiscountFactor discount = 1.0;
+		//********************************************************************************************************************
         Date lastDate = npvDate;
         const DayCounter& dc = y.dayCounter();
+		//********************************************************************************************************************
+		Time t = 0.0;//******* added by me
+		//********************************************************************************************************************
         for (Size i=0; i<leg.size(); ++i) {
             if (leg[i]->hasOccurred(settlementDate,
                                     includeSettlementDateFlows))
@@ -860,9 +866,14 @@ namespace QuantLib {
             if (leg[i]->tradingExCoupon(settlementDate)) {
                 amount = 0.0;
             }
-
-            DiscountFactor b = y.discountFactor(getStepwiseDiscountTime(leg[i], dc, npvDate, lastDate));
-            discount *= b;
+			
+			//********************************************************************************************************************
+			//The following 2 lines were commented out and replaced with the next 2 lines by me
+//            DiscountFactor b = y.discountFactor(getStepwiseDiscountTime(leg[i], dc, npvDate, lastDate));
+//            discount *= b;
+			t += getStepwiseDiscountTime(leg[i], dc, npvDate, lastDate);//******* added by me
+			DiscountFactor discount = y.discountFactor(t);
+			//********************************************************************************************************************
             lastDate = leg[i]->date();
 
             npv += amount * discount;

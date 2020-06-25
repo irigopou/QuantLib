@@ -158,6 +158,11 @@ namespace QuantLib {
         const std::vector<Date>& jumpDates() const;
         const std::vector<Time>& jumpTimes() const;
         //@}
+		
+		//********************************************************************************
+		//DERISCOPE: used by clients to set the local boolean variable transientJumps_
+		void setTransientJumps( bool b );
+		//********************************************************************************
 
         //! \name Observer interface
         //@{
@@ -184,6 +189,10 @@ namespace QuantLib {
         std::vector<Time> jumpTimes_;
         Size nJumps_;
         Date latestReference_;
+		//********************************************************************************
+		//DERISCOPE: Used in discount(). See comments there
+		bool transientJumps_;//set by default to TRUE for backward compatibility
+		//********************************************************************************
     };
 
     // inline definitions

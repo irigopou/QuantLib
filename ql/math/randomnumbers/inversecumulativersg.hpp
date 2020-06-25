@@ -63,6 +63,10 @@ namespace QuantLib {
         const sample_type& nextSequence() const;
         const sample_type& lastSequence() const { return x_; }
         Size dimension() const { return dimension_; }
+		//********************************************************************************************************************************************************
+		//DERISCOPE: Added accessor to the USG object in order to allow access to the SobolRsg inside it (if applicable) and call its setDigitalShift() method.
+		USG & uniformSequenceGenerator() { return uniformSequenceGenerator_; }
+		//********************************************************************************************************************************************************
       private:
         USG uniformSequenceGenerator_;
         Size dimension_;

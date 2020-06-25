@@ -87,6 +87,10 @@ namespace QuantLib {
         for (Size i=0; i<nJumps_; ++i)
             jumpTimes_[i] = timeFromReference(jumpDates_[i]);
         latestReference_ = referenceDate;
+		//********************************************************************************
+		//DERISCOPE: Used in discount(). See comments there
+		transientJumps_ = true;//TRUE for backward compatibility
+		//********************************************************************************
     }
 
     DiscountFactor YieldTermStructure::discount(Time t,
@@ -102,10 +106,25 @@ namespace QuantLib {
                 QL_REQUIRE(jumps_[i]->isValid(),
                            "invalid " << io::ordinal(i+1) << " jump quote");
                 DiscountFactor thisJump = jumps_[i]->value();
-                QL_REQUIRE(thisJump > 0.0,
-                           "invalid " << io::ordinal(i+1) << " jump value: " <<
-                           thisJump);
-                jumpEffect *= thisJump;
+				//********************************************************************************
+				//DERISCOPE: Changed the treatment of jumps based on the setting of the newly introduced boolean _transientJumps
+				//The original treatment corresponds to _transientJumps = TRUE, where thisJump is expected to equal the corresponding multiplier designed to multiply the discount factor
+				//When _transientJumps = FALSE, thisJump is expected to equal the jump in the continuously compounded overnight rate
+				if( transientJumps_ ) {//same code here as in original
+				//********************************************************************************
+					QL_REQUIRE(thisJump > 0.0,
+							   "invalid " << io::ordinal(i+1) << " jump value: " <<
+							   thisJump);
+					jumpEffect *= thisJump;
+				//********************************************************************************
+				//DERISCOPE: see above
+				}
+				else {//treat the thisJump as the jump in the continuously compounded overnight rate
+					double dt = t - jumpTimes_[i];
+					double jumpDF = exp( -thisJump*dt );
+					jumpEffect *= jumpDF;
+				}
+				//********************************************************************************
             }
         }
         return jumpEffect * discountImpl(t);
@@ -184,6 +203,10 @@ namespace QuantLib {
         return InterestRate::impliedRate(compound,
                                          dayCounter(), comp, freq,
                                          t2-t1);
+    }
+	
+    void YieldTermStructure::setTransientJumps( bool b ) {
+        transientJumps_ = b;
     }
 
     void YieldTermStructure::update() {

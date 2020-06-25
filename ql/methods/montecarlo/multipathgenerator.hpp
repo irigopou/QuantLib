@@ -56,6 +56,10 @@ namespace QuantLib {
                            bool brownianBridge = false);
         const sample_type& next() const;
         const sample_type& antithetic() const;
+		//********************************************************************************************************************************************************
+		//DERISCOPE: Added accessor to the GSG object in order to allow access to the SobolRsg inside it (if applicable) and call its setDigitalShift() method.
+		GSG & generator() { return generator_; }
+		//********************************************************************************************************************************************************
       private:
         const sample_type& next(bool antithetic) const;
         bool brownianBridge_;

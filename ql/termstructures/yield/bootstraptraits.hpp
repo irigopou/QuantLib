@@ -32,6 +32,7 @@
 #include <ql/termstructures/yield/interpolatedsimplezerocurve.hpp>
 #include <ql/termstructures/yield/forwardcurve.hpp>
 #include <ql/termstructures/bootstraphelper.hpp>
+#include <ql/utilities/typesareequal.hpp>
 
 namespace QuantLib {
 
@@ -244,7 +245,10 @@ namespace QuantLib {
             }
             // no constraints.
             // We choose as min a value very unlikely to be exceeded.
-            return -detail::maxRate;
+			//****Deriscope
+            //return -detail::maxRate;//replaced with the next 2 lines to avoid using negative rate when the acting interpolation cannot handle it
+			bool allowsPositiveRatesOnly = TypesAreEqual<C::typename interpolator_type,LogLinear>::Yes || TypesAreEqual<C::typename interpolator_type,LogCubic>::Yes;
+            return allowsPositiveRatesOnly ? QL_EPSILON : -detail::maxRate;
         }
         template <class C>
         static Real maxValueAfter(Size,
