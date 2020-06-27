@@ -40,8 +40,12 @@ namespace QuantLib {
     */
     class ShiftedTermStructure : public YieldTermStructure {
       public:
+		//Deriscope: Added 3 optional arguments after shiftedReferenceDate
         ShiftedTermStructure(const Handle<YieldTermStructure>&,
-                             const Date& shiftedReferenceDate);
+                             const Date& shiftedReferenceDate,
+                             Real dfMultiplier = 1.0,
+                             const Date& lastZeroDfDt = Date(),
+                             const Date& firstZeroDfDt = Date());
         //! \name YieldTermStructure interface
         //@{
         DayCounter dayCounter() const;
@@ -49,12 +53,20 @@ namespace QuantLib {
         Natural settlementDays() const;
         Date maxDate() const;
         Date shiftedReferenceDate() const;
+		//Deriscope: Added 3 accessors
+        Real dfMultiplier() const;
+        const Date& lastZeroDfDt() const;
+        const Date& firstZeroDfDt() const;
       protected:
         DiscountFactor discountImpl(Time) const;
         //@}
       private:
         Handle<YieldTermStructure> originalCurve_;
 		Date shiftedReferenceDate_;
+		//Deriscope: Added 3 private variables
+		Real dfMultiplier_;
+		Date lastZeroDfDt_;
+		Date firstZeroDfDt_;
     };
 
 
@@ -62,9 +74,13 @@ namespace QuantLib {
 
     inline ShiftedTermStructure::ShiftedTermStructure(
                                           const Handle<YieldTermStructure>& h,
-                                          const Date& shiftedReferenceDate)
+                                          const Date& shiftedReferenceDate,
+										  Real dfMultiplier,
+										  const Date& lastZeroDfDt,
+										  const Date& firstZeroDfDt)
     : YieldTermStructure(h->referenceDate()), originalCurve_(h), 
-		shiftedReferenceDate_(shiftedReferenceDate) {
+		shiftedReferenceDate_(shiftedReferenceDate), dfMultiplier_(dfMultiplier),
+		lastZeroDfDt_(lastZeroDfDt), firstZeroDfDt_(firstZeroDfDt) {
         registerWith(originalCurve_);
     }
 
@@ -88,7 +104,39 @@ namespace QuantLib {
         return shiftedReferenceDate_;
     }
 
+    inline Real ShiftedTermStructure::dfMultiplier() const {
+        return dfMultiplier_;
+    }
+
+    inline const Date& ShiftedTermStructure::lastZeroDfDt() const {
+        return lastZeroDfDt_;
+    }
+
+    inline const Date& ShiftedTermStructure::firstZeroDfDt() const {
+        return firstZeroDfDt_;
+    }
+
     inline DiscountFactor ShiftedTermStructure::discountImpl(Time t) const {
+		//*** Start of Deriscope addition  ***
+		Date const & refDate = referenceDate();
+		//return 1 when t is 0 in all cases because several pricing routines often divide the 
+		//final result with the discount factor as of the reference date
+		if(t==0)
+			return 1.0;
+		//return 0 if t indicates a date occurring on or before lastZeroDfDt_
+		if( lastZeroDfDt_ != Date() ) {
+			Time timeToLastZeroDfDt = dayCounter().yearFraction(refDate, lastZeroDfDt_);
+			if(t<=timeToLastZeroDfDt)
+				return 0.0;
+		}
+		//return 0 if t indicates a date occurring on or after firstZeroDfDt_
+		if( firstZeroDfDt_ != Date() ) {
+			Time timeToFirstZeroDfDt = dayCounter().yearFraction(refDate, firstZeroDfDt_);
+			if(t>=timeToFirstZeroDfDt)
+				return 0.0;
+		}
+		//calc the time until shiftedRefDate_
+		//*** End of Deriscope addition  ***
 		Time shift = dayCounter().yearFraction(
                                         referenceDate(), shiftedReferenceDate_);
 		Real d1;
@@ -109,7 +157,10 @@ namespace QuantLib {
 			This is achieved by setting shiftedTime equal to t*/
 		Time shiftedTime = t > shift ? t-shift : t;
 		Real d2 = originalCurve_->discount(shiftedTime, true);
-        return d1*d2;
+		//*** Start of Deriscope addition  ***
+        //return d1*d2;
+        return dfMultiplier_*d1*d2;
+		//*** End of Deriscope addition  ***
     }
 
 }
