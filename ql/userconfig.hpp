@@ -92,7 +92,7 @@
 /* Define this to replace std::auto_ptr with std::unique_ptr.
    This requires you to set your compiler's standard to at least C++11. */
 #ifndef QL_USE_STD_UNIQUE_PTR
-//#    define QL_USE_STD_UNIQUE_PTR
+#define QL_USE_STD_UNIQUE_PTR
 #endif
 
 /* Define this to use std::function and std::bind instead of
