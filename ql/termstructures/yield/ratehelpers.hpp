@@ -100,6 +100,10 @@ namespace QuantLib {
         //@{
         Real convexityAdjustment() const;
         //@}
+		//********************************************************************
+		//Deriscope: Added inspectors
+		Time const yearFraction() const { return yearFraction_; }
+		//********************************************************************
         //! \name Visitability
         //@{
         void accept(AcyclicVisitor&);
@@ -135,6 +139,11 @@ namespace QuantLib {
         //@{
         Real impliedQuote() const;
         void setTermStructure(YieldTermStructure*);
+		//********************************************************************
+		//Deriscope: Added inspectors
+		Date const & fixingDate() const { return fixingDate_; }
+		ext::shared_ptr<IborIndex> const & iborIndex() const { return iborIndex_; }
+		//********************************************************************
         //@}
         //! \name Visitability
         //@{
@@ -238,6 +247,17 @@ namespace QuantLib {
         Real impliedQuote() const;
         void setTermStructure(YieldTermStructure*);
         //@}
+		//********************************************************************
+		//Deriscope: Added inspectors
+		Date const & fixingDate() const { return fixingDate_; }
+		boost::optional<Period> const & periodToStart() const { return periodToStart_; }
+		ext::shared_ptr<IborIndex> const & iborIndex() const { return iborIndex_; }
+		boost::optional<Natural> const immOffsetStart() const { return immOffsetStart_; }
+		boost::optional<Natural> const immOffsetEnd() const { return immOffsetEnd_; }
+		Pillar::Choice const pillarChoice() const { return pillarChoice_; }
+		bool const useIndexedCoupon() const { return useIndexedCoupon_; }
+		Real const spanningTime() const { return spanningTime_; }
+		//********************************************************************
         //! \name Visitability
         //@{
         void accept(AcyclicVisitor&);
@@ -368,6 +388,18 @@ namespace QuantLib {
         //@{
         Real impliedQuote() const;
         void setTermStructure(YieldTermStructure*);
+		//********************************************************************
+		//Deriscope: Added inspectors
+		Period const & tenor() const { return tenor_; }
+		Natural const settlementDays() const { return settlementDays_; }
+		Calendar const & calendar() const { return calendar_; }
+		Period const & bmaPeriod() const { return bmaPeriod_; }
+		BusinessDayConvention const bmaConvention() const { return bmaConvention_; }
+		DayCounter const & bmaDayCount() const { return bmaDayCount_; }
+		ext::shared_ptr<BMAIndex> const & bmaIndex() const { return bmaIndex_; }
+		ext::shared_ptr<IborIndex> const & iborIndex() const { return iborIndex_; }
+		ext::shared_ptr<BMASwap> const & swap() const { return swap_; }
+		//********************************************************************
         //@}
         //! \name Visitability
         //@{
