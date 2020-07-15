@@ -28,6 +28,7 @@
 
 #include <ql/termstructures/yield/bondhelpers.hpp>
 #include <ql/math/optimization/method.hpp>
+#include <ql/math/optimization/constraint.hpp>
 #include <ql/patterns/lazyobject.hpp>
 #include <ql/math/array.hpp>
 #include <ql/utilities/clone.hpp>
@@ -202,6 +203,8 @@ namespace QuantLib {
         #endif
         //! return whether there is a constraint at zero
         bool constrainAtZero() const;
+		//Dericope: Added here in order to enable clients to set the constraint_ after the object construction. The alternative route would have been to extend the constructors of all children classes!
+		void setConstraint( Constraint const & constraint ) { constraint_ = constraint; }
         //! return weights being used
         Array weights() const;
         //! return l2 penalties being used
@@ -256,6 +259,7 @@ namespace QuantLib {
         ext::shared_ptr<OptimizationMethod> optimizationMethod_;
         // flat extrapolation of instantaneous forward before / after cutoff
         Real minCutoffTime_, maxCutoffTime_;
+		Constraint constraint_;//Deriscope: Added
     };
 
     // inline
