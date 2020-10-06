@@ -53,7 +53,13 @@ namespace QuantLib {
                 Real compoundFactor = 1.0;
 
                 // already fixed part
-                Date today = Settings::instance().evaluationDate();
+				//********************************************************************************
+				//DERISCOPE: Commented out the line below on 18.09.20 and replaced it with my newly added TermStructure method getHistHorDate()
+				//The effect of this change is that historical data are being read as long as fixingDate_ < today, where today is now returned by getHistHorDate()
+				//The GUI has previously set the respective date inside the referenced TermStructure by calling the new TermStructure method setHistHorDate() 
+				//Date today = Settings::instance().evaluationDate();
+				Date const & today = index->forwardingTermStructure()->getHistHorDate();
+				//********************************************************************************
                 while (i<n && fixingDates[i]<today) {
                     // rate must have been fixed
                     Rate pastFixing = IndexManager::instance().getHistory(

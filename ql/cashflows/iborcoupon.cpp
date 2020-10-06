@@ -111,13 +111,38 @@ namespace QuantLib {
            1) allows to save date/time recalculations, and
            2) takes into account par coupon needs
         */
-        Date today = Settings::instance().evaluationDate();
-
-        if (fixingDate_>today)
+		//********************************************************************************
+		//DERISCOPE: Commented out the line below on 18.09.20 and replaced it with my newly added TermStructure method getHistHorDate()
+		//The effect of this change is that historical data are being read as long as fixingDate_ < today, where today is now returned by getHistHorDate()
+		//The GUI has previously set the respective date inside the referenced TermStructure by calling the new TermStructure method setHistHorDate() 
+        //Date today = Settings::instance().evaluationDate();
+        Date const & today = iborIndex_->forwardingTermStructure()->getHistHorDate();
+		//********************************************************************************
+		
+		//********************************************************************************
+		//DERISCOPE: Commented out all below on 27.09.20 and replaced it with the shown two if statements because it is not a good idea to 
+		//treat the case fixingDate_ == today depending on whether or not historical fixings have been supplied by the user!
+		//If the user prefers to use historical fixings for today, the clean solution is by setting the Hist Hor Date input to the 
+		//Deriscope Price function to equal tomorrow's date!
+		//This will result in the variable "today" used here to equal tomorrow's date and the < inequality below would prevail.
+        if (fixingDate_ > today || (fixingDate_ == today && !Settings::instance().enforcesTodaysHistoricFixings()))
             return iborIndex_->forecastFixing(fixingValueDate_,
                                               fixingEndDate_,
                                               spanningTime_);
+        else {
+            // do not catch exceptions
+            Rate result = index_->pastFixing(fixingDate_);
+            QL_REQUIRE(result != Null<Real>(),
+                       "Missing " << index_->name() << " fixing for " << fixingDate_);
+            return result;
+        }
 
+		/*
+		if (fixingDate_>today)
+            return iborIndex_->forecastFixing(fixingValueDate_,
+                                              fixingEndDate_,
+                                              spanningTime_);
+											  
         if (fixingDate_<today ||
             Settings::instance().enforcesTodaysHistoricFixings()) {
             // do not catch exceptions
@@ -139,6 +164,8 @@ namespace QuantLib {
         return iborIndex_->forecastFixing(fixingValueDate_,
                                           fixingEndDate_,
                                           spanningTime_);
+		*/
+		//********************************************************************************
     }
 
     void IborCoupon::accept(AcyclicVisitor& v) {
