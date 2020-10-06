@@ -26,6 +26,27 @@
 
 namespace QuantLib {
 
+	Real frequencyAsReal( Frequency f ) {
+        switch (f) {
+		  //*****  Special Cases Start  ******
+          case Every26Weeks:
+            return 2.0;
+          case Every26Weeks_360:
+            return 360.0/182.0;
+          case Every26Weeks_365:
+            return 365.0/182.0;
+		  //*****  Special Cases End  ******
+
+		  //*****  Invalid Cases Start  ******
+          case NoFrequency:
+          case OtherFrequency:
+			  QL_FAIL("unknown frequency (" << Integer(f) << ")");
+		  //*****  Invalid Cases End  ******
+          default:
+			return (Real) f;//Remaining cases
+        }
+	}
+
     std::ostream& operator<<(std::ostream& out, Frequency f) {
         switch (f) {
           case NoFrequency:
@@ -52,6 +73,14 @@ namespace QuantLib {
             return out << "Weekly";
           case Daily:
             return out << "Daily";
+		  //*****  DERISCOPE START  ******
+          case Every26Weeks:
+            return out << "Every-26-weeks";
+          case Every26Weeks_360:
+            return out << "Every-182-Days-360";
+          case Every26Weeks_365:
+            return out << "Every-182-Days-365";
+		  //*****  DERISCOPE END  ******
           case OtherFrequency:
             return out << "Unknown frequency";
           default:
