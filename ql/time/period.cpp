@@ -55,6 +55,12 @@ namespace QuantLib {
             units_ = Weeks;
             length_ = 52/f;
             break;
+          case Every26Weeks://DERISCOPE: Added
+          case Every26Weeks_360://DERISCOPE: Added
+          case Every26Weeks_365://DERISCOPE: Added
+            units_ = Weeks;
+            length_ = 2;
+            break;
           case Daily:
             units_ = Days;
             length_ = 1;

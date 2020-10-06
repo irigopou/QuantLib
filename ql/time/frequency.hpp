@@ -28,6 +28,7 @@
 #define quantlib_frequency_hpp
 
 #include <ql/qldefines.hpp>
+#include <ql/types.hpp>//DERISCOPE: Added to support the Real in the declaration of frequencyAsReal
 #include <iosfwd>
 
 namespace QuantLib {
@@ -46,8 +47,15 @@ namespace QuantLib {
                      Biweekly = 26,        //!< every second week
                      Weekly = 52,          //!< once a week
                      Daily = 365,          //!< once a day
+					 //*****  DERISCOPE START  ******
+                     Every26Weeks = 400,   //!< converts to period of 26 weeks and frequency of 2 = 52/26 (the 400 is arbitrary here)
+                     Every26Weeks_360 =  401,   //!< converts to period of 26 weeks and frequency of 360/182 (the 401 is arbitrary here)
+                     Every26Weeks_365 =  402,   //!< converts to period of 26 weeks and frequency of 365/182 (the 402 is arbitrary here)
+					 //*****  DERISCOPE END  ******
                      OtherFrequency = 999  //!< some other unknown frequency
     };
+
+	Real frequencyAsReal( Frequency f );
 
     /*! \relates Frequency */
     std::ostream& operator<<(std::ostream& out,
