@@ -4324,6 +4324,9 @@
     <ClInclude Include="ql\pricingengines\vanilla\exponentialfittinghestonengine.hpp">
       <Filter>pricingengines\vanilla</Filter>
     </ClInclude>
+    <ClInclude Include="ql\termstructures\yield\shiftedtermstructure.hpp">
+      <Filter>termstructures\yield</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ql\methods\montecarlo\brownianbridge.cpp">
