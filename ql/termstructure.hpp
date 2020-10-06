@@ -91,6 +91,11 @@ namespace QuantLib {
         virtual Calendar calendar() const;
         //! the settlementDays used for reference date calculation
         virtual Natural settlementDays() const;
+		//********************************************************************************
+		//DERISCOPE: 
+		Date const & getHistHorDate() const;
+		void setHistHorDate( Date const & histHorDate ) const;
+		//********************************************************************************
         //@}
         //! \name Observer interface
         //@{
@@ -110,6 +115,12 @@ namespace QuantLib {
         mutable Date referenceDate_;
         Natural settlementDays_;
         DayCounter dayCounter_;
+		//********************************************************************************
+		//DERISCOPE: 
+		//mirrors the _histHorDate defined in Deriscope::Market => index fixings before this date are read from the hist data
+		//By default, it is set equal to referenceDate_
+		mutable Date histHorDate_;
+		//********************************************************************************
     };
 
     // inline definitions

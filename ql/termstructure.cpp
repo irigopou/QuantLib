@@ -33,6 +33,7 @@ namespace QuantLib {
                                  const DayCounter& dc)
     : moving_(false), updated_(true), calendar_(cal),
       referenceDate_(referenceDate),
+	  histHorDate_(referenceDate),
       settlementDays_(Null<Natural>()),
       dayCounter_(dc) {}
 
@@ -49,10 +50,25 @@ namespace QuantLib {
         if (!updated_) {
             Date today = Settings::instance().evaluationDate();
             referenceDate_ = calendar().advance(today, settlementDays(), Days);
+			histHorDate_ = referenceDate_;
             updated_ = true;
         }
         return referenceDate_;
     }
+
+	Date const & TermStructure::getHistHorDate() const {
+        if (!updated_) {
+            Date today = Settings::instance().evaluationDate();
+            referenceDate_ = calendar().advance(today, settlementDays(), Days);
+			histHorDate_ = referenceDate_;
+            updated_ = true;
+        }
+        return histHorDate_;
+	}
+
+	void TermStructure::setHistHorDate( Date const & histHorDate ) const {
+		histHorDate_ = histHorDate;
+	}
 
     void TermStructure::update() {
         if (moving_)
