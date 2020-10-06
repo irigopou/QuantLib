@@ -91,14 +91,57 @@ namespace QuantLib {
         /* t is relative to the current reference date
            and needs to be converted to the time relative
            to the reference date of the original curve */
-        Date ref = referenceDate();
-        Time originalTime = t + dayCounter().yearFraction(
-                                        originalCurve_->referenceDate(), ref);
+        Date const & ref = referenceDate();
+		Date const & spotDate = originalCurve_->referenceDate();
+        Time originalTime = t + dayCounter().yearFraction(spotDate, ref);
         /* discount at evaluation date cannot be cached
            since the original curve could change between
            invocations of this method */
-        return originalCurve_->discount(originalTime, true) /
-               originalCurve_->discount(ref, true);
+
+		//*******************************************************************************************************************
+		// DERISCOPE: Below commented out on 16.09.20 and replaced with the shown code because the discount() method may fail 
+		// if the global eval date does not match the spot date, i.e. the originalCurve_->referenceDate() (see nest 2 lines)
+		// Note the interpretation holds: originalCurve_ is the spot curve and *this is the forward curve
+		// from which follows: spot date = originalCurve_->referenceDate() and forward date = this->referenceDate()
+		//
+		// The solution is to temporarily set the global eval date equal to the spot date and reset it back to its initial value at the end.
+		// This solution has the drawback that it causes run time delays.
+		// A useful trick is for the client to ensure that the global eval date is already set to the spot date before this function here is called.
+
+//        return originalCurve_->discount(originalTime, true) /
+//               originalCurve_->discount(ref, true);
+
+		Date globalEvalDate = Settings::instance().evaluationDate();//read the current global eval date
+		//For efficiency, handle the case refOrig == ref separately
+		if( spotDate == globalEvalDate ) {
+			//Here we can safely access the methods of originalCurve_ because the global eval date equals its own local reference date
+			DiscountFactor denom = originalCurve_->discount(ref, true);
+            QL_REQUIRE(denom != 0,
+                       "Discount factor of spot curve for maturity " <<
+                       ref << " must not be 0");
+			DiscountFactor numer = originalCurve_->discount(originalTime, true);
+			return numer / denom;
+		}
+		else {
+			//Here we can safely access the methods of originalCurve_ only after the global eval date has been reset to equal own local reference date
+			try {
+				Settings::instance().evaluationDate() = spotDate;//set (temporarily) the global eval date to equal the spot date
+				//Now we can safely access the methods of originalCurve_
+				DiscountFactor denom = originalCurve_->discount(ref, true);
+				QL_REQUIRE(denom != 0,
+						   "Discount factor of spot curve for maturity " <<
+						   ref << " must not be 0");
+				DiscountFactor numer = originalCurve_->discount(originalTime, true);
+				Settings::instance().evaluationDate() = globalEvalDate;//reset
+				return numer / denom;
+			}
+			catch (...) {
+				Settings::instance().evaluationDate() = globalEvalDate;//reset
+				throw;
+			}
+		}
+		//*******************************************************************************************************************
+
     }
 
 }
