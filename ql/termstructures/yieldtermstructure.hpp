@@ -160,7 +160,8 @@ namespace QuantLib {
         //@}
 		
 		//********************************************************************************
-		//DERISCOPE: used by clients to set the local boolean variable transientJumps_
+		//DERISCOPE: 
+		//used by clients to set the local boolean variable transientJumps_
 		void setTransientJumps( bool b );
 		//********************************************************************************
 
@@ -190,7 +191,8 @@ namespace QuantLib {
         Size nJumps_;
         Date latestReference_;
 		//********************************************************************************
-		//DERISCOPE: Used in discount(). See comments there
+		//DERISCOPE: 
+		//Used in discount(). See comments there
 		bool transientJumps_;//set by default to TRUE for backward compatibility
 		//********************************************************************************
     };
