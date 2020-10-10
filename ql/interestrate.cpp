@@ -83,7 +83,7 @@ namespace QuantLib {
             r = 0.0;
         } else {
             QL_REQUIRE(t>0.0, "positive time (" << t << ") required");
-			Real f = comp == Simple ? 0.0 : frequencyAsReal(freq);
+			Real f = frequencyAsReal(freq);
             switch (comp) {
               case Simple:
                 r = (compound - 1.0)/t;
