@@ -38,12 +38,11 @@ namespace QuantLib {
 		  //*****  Special Cases End  ******
 
 		  //*****  Invalid Cases Start  ******
-          case NoFrequency:
           case OtherFrequency:
 			  QL_FAIL("unknown frequency (" << Integer(f) << ")");
 		  //*****  Invalid Cases End  ******
           default:
-			return (Real) f;//Remaining cases
+			return (Real) f;//Remaining cases. Here belongs the NoFrequency (-1) too, which should not cause error throwing here because it would normally not be used by the client!
         }
 	}
 
