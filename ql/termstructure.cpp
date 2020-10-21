@@ -67,7 +67,7 @@ namespace QuantLib {
 	}
 
 	void TermStructure::setHistHorDate( Date const & histHorDate ) const {
-		histHorDate_ = histHorDate;
+		histHorDate_ = histHorDate == Date() ? referenceDate_ : histHorDate;
 	}
 
     void TermStructure::update() {
