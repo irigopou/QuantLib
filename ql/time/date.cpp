@@ -796,6 +796,22 @@ namespace QuantLib {
         return Date((1 + dayOfWeek + skip*7) - first, m, y);
     }
 
+	//aded by Deriscope
+	bool const Date::iSnthWeekday(Size nth, Weekday dayOfWeek) const {
+		Month m = month();
+		Year y = year();
+		Date dt = nthWeekday( nth, dayOfWeek, m, y );
+		return *this == dt;
+	}
+	
+	//aded by Deriscope
+	void Date::require_iSnthWeekday(Size nth, Weekday dayOfWeek) const {
+		bool b = iSnthWeekday(nth, dayOfWeek);
+        QL_REQUIRE(b,
+                   "date " << *this << " is not the " << Integer(nth)
+                       << " " << dayOfWeek << " of its own month" );
+	}
+
     // month formatting
 
     std::ostream& operator<<(std::ostream& out, Month m) {

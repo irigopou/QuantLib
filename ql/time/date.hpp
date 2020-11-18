@@ -229,6 +229,9 @@ namespace QuantLib {
                                Weekday w,
                                Month m,
                                Year y);
+		
+        bool const iSnthWeekday(Size nth, Weekday dayOfWeek) const;//aded by Deriscope
+        void require_iSnthWeekday(Size nth, Weekday dayOfWeek) const;//aded by Deriscope
 
 #ifdef QL_HIGH_RESOLUTION_DATE
         //! local date time, based on the time zone settings of the computer
