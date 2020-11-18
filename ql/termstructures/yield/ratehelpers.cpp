@@ -50,6 +50,8 @@ namespace QuantLib {
                                          Futures::Type type)
     : RateHelper(price), convAdj_(convAdj) {
         switch (type) {
+          case Futures::Any://Added by Deriscope
+			break;
           case Futures::IMM:
             QL_REQUIRE(IMM::isIMMdate(iborStartDate, false),
                        iborStartDate << " is not a valid IMM date");
@@ -57,6 +59,13 @@ namespace QuantLib {
           case Futures::ASX:
             QL_REQUIRE(ASX::isASXdate(iborStartDate, false),
                        iborStartDate << " is not a valid ASX date");
+            break;
+          case Futures::ThirdWed://Added by Deriscope
+			iborStartDate.require_iSnthWeekday(3, Wednesday);
+            break;
+          case Futures::MonthStart://Added by Deriscope
+            QL_REQUIRE(iborStartDate.dayOfMonth() == 1,
+                       iborStartDate << " is not a first date of month");
             break;
           default:
             QL_FAIL("unknown futures type (" << Integer(type) << ")");
@@ -83,6 +92,8 @@ namespace QuantLib {
       convAdj_(Handle<Quote>(ext::shared_ptr<Quote>(new SimpleQuote(convAdj))))
     {
         switch (type) {
+          case Futures::Any://Added by Deriscope
+			break;
           case Futures::IMM:
             QL_REQUIRE(IMM::isIMMdate(iborStartDate, false),
                 iborStartDate << " is not a valid IMM date");
@@ -91,6 +102,12 @@ namespace QuantLib {
             QL_REQUIRE(ASX::isASXdate(iborStartDate, false),
                 iborStartDate << " is not a valid ASX date");
             break;
+          case Futures::ThirdWed://Added by Deriscope
+			iborStartDate.require_iSnthWeekday(3, Wednesday);
+            break;
+          case Futures::MonthStart://Added by Deriscope
+            QL_REQUIRE(iborStartDate.dayOfMonth() == 1,
+                       iborStartDate << " is not a first date of month");
           default:
             QL_FAIL("unknown futures type (" << Integer(type) << ")");
         }
@@ -109,6 +126,8 @@ namespace QuantLib {
                                          Futures::Type type)
     : RateHelper(price), convAdj_(convAdj) {
         switch (type) {
+          case Futures::Any://Added by Deriscope
+			break;
           case Futures::IMM:
             QL_REQUIRE(IMM::isIMMdate(iborStartDate, false),
                        iborStartDate << " is not a valid IMM date");
@@ -143,6 +162,12 @@ namespace QuantLib {
                 maturityDate_ = iborEndDate;
             }
             break;
+          case Futures::ThirdWed://Added by Deriscope
+			iborStartDate.require_iSnthWeekday(3, Wednesday);
+			break;
+          case Futures::MonthStart://Added by Deriscope
+            QL_REQUIRE(iborStartDate.dayOfMonth() == 1,
+                       iborStartDate << " is not a first date of month");
           default:
             QL_FAIL("unknown futures type (" << Integer(type) << ")");
         }
@@ -163,6 +188,8 @@ namespace QuantLib {
       convAdj_(Handle<Quote>(ext::shared_ptr<Quote>(new SimpleQuote(convAdj))))
     {
         switch (type) {
+          case Futures::Any://Added by Deriscope
+			break;
           case Futures::IMM:
             QL_REQUIRE(IMM::isIMMdate(iborStartDate, false),
                        iborStartDate << " is not a valid IMM date");
@@ -197,6 +224,12 @@ namespace QuantLib {
                 latestRelevantDate_ = iborEndDate;
             }
             break;
+          case Futures::ThirdWed://Added by Deriscope
+			iborStartDate.require_iSnthWeekday(3, Wednesday);
+            break;
+          case Futures::MonthStart://Added by Deriscope
+            QL_REQUIRE(iborStartDate.dayOfMonth() == 1,
+                       iborStartDate << " is not a first date of month");
           default:
             QL_FAIL("unknown futures type (" << Integer(type) << ")");
         }
@@ -212,6 +245,8 @@ namespace QuantLib {
                                          Futures::Type type)
     : RateHelper(price), convAdj_(convAdj) {
         switch (type) {
+          case Futures::Any://Added by Deriscope
+			break;
           case Futures::IMM:
             QL_REQUIRE(IMM::isIMMdate(iborStartDate, false),
                        iborStartDate << " is not a valid IMM date");
@@ -220,6 +255,12 @@ namespace QuantLib {
             QL_REQUIRE(ASX::isASXdate(iborStartDate, false),
                        iborStartDate << " is not a valid ASX date");
             break;
+          case Futures::ThirdWed://Added by Deriscope
+			iborStartDate.require_iSnthWeekday(3, Wednesday);
+            break;
+          case Futures::MonthStart://Added by Deriscope
+            QL_REQUIRE(iborStartDate.dayOfMonth() == 1,
+                       iborStartDate << " is not a first date of month");
           default:
             QL_FAIL("unknown futures type (" << Integer(type) << ")");
         }
@@ -243,6 +284,8 @@ namespace QuantLib {
       convAdj_(Handle<Quote>(ext::shared_ptr<Quote>(new SimpleQuote(convAdj))))
     {
         switch (type) {
+          case Futures::Any://Added by Deriscope
+			break;
           case Futures::IMM:
             QL_REQUIRE(IMM::isIMMdate(iborStartDate, false),
                 iborStartDate << " is not a valid IMM date");
@@ -251,6 +294,12 @@ namespace QuantLib {
             QL_REQUIRE(ASX::isASXdate(iborStartDate, false),
                 iborStartDate << " is not a valid ASX date");
             break;
+          case Futures::ThirdWed://Added by Deriscope
+			iborStartDate.require_iSnthWeekday(3, Wednesday);
+            break;
+          case Futures::MonthStart://Added by Deriscope
+            QL_REQUIRE(iborStartDate.dayOfMonth() == 1,
+                       iborStartDate << " is not a first date of month");
           default:
             QL_FAIL("unknown futures type (" << Integer(type) << ")");
         }
