@@ -34,10 +34,13 @@ namespace QuantLib {
         //! Futures type enumeration
         /*! These conventions specify the kind of futures type. */
         enum Type {
+            Any, //added by Deriscope. All dates are allowed. Skips QuantLib checks on the reference date.
             IMM, /*!< Chicago Mercantile Internation Money Market, i.e.
                       third Wednesday of March, June, September, December */
-            ASX  /*!< Australian Security Exchange, i.e. second Friday
+            ASX,  /*!< Australian Security Exchange, i.e. second Friday
                       of March, June, September, December */
+            ThirdWed,  //added by Deriscope. The reference date is considered valid if it is the 3rd Wednesday in any month
+            MonthStart  //added by Deriscope. The reference date is considered valid if it is the first calendar date of any month
         };
     };
 
