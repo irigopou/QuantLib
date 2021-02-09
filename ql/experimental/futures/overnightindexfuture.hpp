@@ -37,6 +37,7 @@ namespace QuantLib {
     class OvernightIndexFuture : public Forward {
       public:
         enum NettingType { Averaging, Compounding };
+		enum Approximation { Telescopic, Takada, None };//added by Deriscope
 
         OvernightIndexFuture(const ext::shared_ptr<OvernightIndex>& overnightIndex,
                              const ext::shared_ptr<Payoff>& payoff,
@@ -44,7 +45,8 @@ namespace QuantLib {
                              const Date& maturityDate,
                              const Handle<YieldTermStructure>& discountCurve,
                              const Handle<Quote>& convexityAdjustment = Handle<Quote>(),
-                             NettingType subPeriodsNettingType = Compounding);
+                             const NettingType subPeriodsNettingType = Compounding,
+							 const Approximation approx = None);
 
         //! returns spot value/price of an underlying financial instrument
         virtual Real spotValue() const;
@@ -62,6 +64,7 @@ namespace QuantLib {
         ext::shared_ptr<OvernightIndex> overnightIndex_;
         Handle<Quote> convexityAdjustment_;
         NettingType subPeriodsNettingType_;
+		Approximation approx_;//added by Deriscope
     };
 
 }
