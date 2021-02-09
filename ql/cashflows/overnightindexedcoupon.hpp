@@ -103,7 +103,7 @@ namespace QuantLib {
         OvernightLeg& withSpreads(const std::vector<Spread>& spreads);
         OvernightLeg& withTelescopicValueDates(bool telescopicValueDates);
         operator Leg() const;
-      private:
+      protected://Deriscope: Changed from private to protected
         Schedule schedule_;
         ext::shared_ptr<OvernightIndex> overnightIndex_;
         std::vector<Real> notionals_;

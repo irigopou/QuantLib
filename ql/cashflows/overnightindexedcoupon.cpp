@@ -171,11 +171,13 @@ namespace QuantLib {
             // contains at least two dates
             Date tmp = overnightIndex->fixingCalendar().advance(
                 endDate, -1, Days, Preceding);
-            if (tmp != valueDates_.back())
+            //if (tmp != valueDates_.back())
+            if (tmp > valueDates_.back())//Deriscope: replaced the above because it could happen that tmp already was part of valueDates_ when the period was <= 7 days
                 valueDates_.push_back(tmp);
             tmp = overnightIndex->fixingCalendar().adjust(
                 endDate, overnightIndex->businessDayConvention());
-            if (tmp != valueDates_.back())
+            //if (tmp != valueDates_.back())
+            if (tmp > valueDates_.back())//Deriscope: replaced the above because it could happen that tmp already was part of valueDates_ when the period was <= 7 days
                 valueDates_.push_back(tmp);
         }
 
