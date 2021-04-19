@@ -1,50 +1,16 @@
 
-# QL_CHECK_LONG_LONG
-# ----------------------------------------------
-# Check whether long long is supported.
-AC_DEFUN([QL_CHECK_LONG_LONG],
-[AC_MSG_CHECKING([long long support])
- AC_TRY_COMPILE(
-    [],
-    [long long i;
-     unsigned long long j;
-    ],
-    [AC_MSG_RESULT([yes])
-     AC_DEFINE([QL_HAVE_LONG_LONG],[],
-               [Define this if your compiler supports the long long type.])
-    ],
-    [AC_MSG_RESULT([no])
-    ])
-])
-
-# QL_CHECK_ASINH
-# ----------------------------------------------
-# Check whether the asinh function is defined in cmath.
-# It defines QL_HAVE_ASINH if found.
-AC_DEFUN([QL_CHECK_ASINH],
-[AC_MSG_CHECKING([for asinh])
- AC_TRY_COMPILE(
-    [@%:@include<cmath>],
-    [double x = asinh(0.0);],
-    [AC_MSG_RESULT([yes])
-     AC_DEFINE([QL_HAVE_ASINH],[],
-               [Define this if your compiler defines asinh in <cmath>.])
-    ],
-    [AC_MSG_RESULT([no])
-    ])
-])
-
 # QL_CHECK_BOOST_DEVEL
 # --------------------
 # Check whether the Boost headers are available
 AC_DEFUN([QL_CHECK_BOOST_DEVEL],
 [AC_MSG_CHECKING([for Boost development files])
- AC_TRY_COMPILE(
-    [@%:@include <boost/version.hpp>
-     @%:@include <boost/shared_ptr.hpp>
-     @%:@include <boost/assert.hpp>
-     @%:@include <boost/current_function.hpp>],
-    [],
+ AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[@%:@include <boost/version.hpp>
+          @%:@include <boost/shared_ptr.hpp>
+          @%:@include <boost/assert.hpp>
+          @%:@include <boost/current_function.hpp>]],
+        [[]])],
     [AC_MSG_RESULT([yes])],
     [AC_MSG_RESULT([no])
      AC_MSG_ERROR([Boost development files not found])
@@ -57,11 +23,12 @@ AC_DEFUN([QL_CHECK_BOOST_DEVEL],
 AC_DEFUN([QL_CHECK_BOOST_VERSION],
 [AC_MSG_CHECKING([for Boost version >= 1.48])
  AC_REQUIRE([QL_CHECK_BOOST_DEVEL])
- AC_TRY_COMPILE(
-    [@%:@include <boost/version.hpp>],
-    [@%:@if BOOST_VERSION < 104800
-     @%:@error too old
-     @%:@endif],
+ AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[@%:@include <boost/version.hpp>]],
+        [[@%:@if BOOST_VERSION < 104800
+          @%:@error too old
+          @%:@endif]])],
     [AC_MSG_RESULT([yes])],
     [AC_MSG_RESULT([no])
      AC_MSG_ERROR([outdated Boost installation])
@@ -74,11 +41,12 @@ AC_DEFUN([QL_CHECK_BOOST_VERSION],
 AC_DEFUN([QL_CHECK_BOOST_VERSION_1_58_OR_HIGHER],
 [AC_MSG_CHECKING([for Boost version >= 1.58])
  AC_REQUIRE([QL_CHECK_BOOST_DEVEL])
- AC_TRY_COMPILE(
-    [@%:@include <boost/version.hpp>],
-    [@%:@if BOOST_VERSION < 105800
-     @%:@error too old
-     @%:@endif],
+ AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[@%:@include <boost/version.hpp>]],
+        [[@%:@if BOOST_VERSION < 105800
+          @%:@error too old
+          @%:@endif]])],
     [AC_MSG_RESULT([yes])],
     [AC_MSG_RESULT([no])
      AC_MSG_ERROR([Boost version 1.58 or higher is required for the thread-safe observer pattern])
@@ -91,11 +59,12 @@ AC_DEFUN([QL_CHECK_BOOST_VERSION_1_58_OR_HIGHER],
 AC_DEFUN([QL_CHECK_BOOST_VERSION_1_59_OR_HIGHER],
 [AC_MSG_CHECKING([for Boost version >= 1.59])
  AC_REQUIRE([QL_CHECK_BOOST_DEVEL])
- AC_TRY_COMPILE(
-    [@%:@include <boost/version.hpp>],
-    [@%:@if BOOST_VERSION < 105900
-     @%:@error too old
-     @%:@endif],
+ AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[@%:@include <boost/version.hpp>]],
+        [[@%:@if BOOST_VERSION < 105900
+          @%:@error too old
+          @%:@endif]])],
     [AC_MSG_RESULT([yes])],
     [AC_MSG_RESULT([no])
      AC_MSG_ERROR([Boost version 1.59 or higher is required for the parallel unit test runner.])
@@ -109,15 +78,16 @@ AC_DEFUN([QL_CHECK_BOOST_VERSION_1_59_OR_HIGHER],
 # Check whether the Boost headers are available
 AC_DEFUN([QL_CHECK_BOOST_UBLAS],
 [AC_MSG_CHECKING([for Boost::uBLAS support])
- AC_TRY_COMPILE(
-    [@%:@include <boost/version.hpp>
-     @%:@if BOOST_VERSION > 106300
-     @%:@include <boost/serialization/array_wrapper.hpp>
-     @%:@endif
-     @%:@include <boost/numeric/ublas/vector_proxy.hpp>
-     @%:@include <boost/numeric/ublas/triangular.hpp>
-     @%:@include <boost/numeric/ublas/lu.hpp>],
-    [],
+ AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+        [[@%:@include <boost/version.hpp>
+          @%:@if BOOST_VERSION > 106300
+          @%:@include <boost/serialization/array_wrapper.hpp>
+          @%:@endif
+          @%:@include <boost/numeric/ublas/vector_proxy.hpp>
+          @%:@include <boost/numeric/ublas/triangular.hpp>
+          @%:@include <boost/numeric/ublas/lu.hpp>]],
+        [[]])],
     [AC_MSG_RESULT([yes])],
     [AC_MSG_RESULT([no])
      AC_MSG_WARN([Some functionality will be disabled.])
@@ -130,34 +100,32 @@ AC_DEFUN([QL_CHECK_BOOST_UBLAS],
 # ------------------------
 # Check whether the Boost unit-test framework is available
 AC_DEFUN([QL_CHECK_BOOST_UNIT_TEST],
-[AC_MSG_CHECKING([for Boost.Test, Boost.Timer, Boost.Chrono and Boost.System])
+[AC_MSG_CHECKING([for Boost.Test])
  AC_REQUIRE([AC_PROG_CC])
  ql_original_LIBS=$LIBS
  ql_original_CXXFLAGS=$CXXFLAGS
  CC_BASENAME=`basename $CC`
  CC_VERSION=`echo "__GNUC__ __GNUC_MINOR__" | $CC -E -x c - | tail -n 1 | $SED -e "s/ //"`
- for suffix in "-$CC_BASENAME$CC_VERSION" \
+ for suffix in "" \
+               "-$CC_BASENAME$CC_VERSION" \
                "-$CC_BASENAME" \
-               "" \
                "-mt-$CC_BASENAME$CC_VERSION" \
                "-$CC_BASENAME$CC_VERSION-mt" \
                "-x$CC_BASENAME$CC_VERSION-mt" \
                "-mt-$CC_BASENAME" \
                "-$CC_BASENAME-mt" \
                "-mt" ; do
-     boost_libs="-lboost_unit_test_framework$suffix -lboost_timer$suffix -lboost_system$suffix"
+     boost_libs="-lboost_unit_test_framework$suffix"
      LIBS="$ql_original_LIBS $boost_libs"
      # static version
      CXXFLAGS="$ql_original_CXXFLAGS"
      boost_unit_found=no
      AC_LINK_IFELSE([AC_LANG_SOURCE(
          [@%:@include <boost/test/unit_test.hpp>
-          @%:@include <boost/timer/timer.hpp>
           using namespace boost::unit_test_framework;
           test_suite*
           init_unit_test_suite(int argc, char** argv)
           {
-              boost::timer::auto_cpu_timer t;
               return (test_suite*) 0;
           }
          ])],
@@ -170,51 +138,10 @@ AC_DEFUN([QL_CHECK_BOOST_UNIT_TEST],
      boost_unit_found=no
      AC_LINK_IFELSE([AC_LANG_SOURCE(
          [@%:@include <boost/test/unit_test.hpp>
-          @%:@include <boost/timer/timer.hpp>
           using namespace boost::unit_test_framework;
           test_suite*
           init_unit_test_suite(int argc, char** argv)
           {
-              boost::timer::auto_cpu_timer t;
-              return (test_suite*) 0;
-          }
-         ])],
-         [boost_unit_found=$boost_libs
-          boost_defines="-DBOOST_TEST_DYN_LINK"
-          break],
-         [])
-     # Boost.Timer might require Boost.Chrono
-     boost_libs="-lboost_unit_test_framework$suffix -lboost_timer$suffix -lboost_chrono$suffix -lboost_system$suffix"
-     LIBS="$ql_original_LIBS $boost_libs"
-     # static version
-     CXXFLAGS="$ql_original_CXXFLAGS"
-     boost_unit_found=no
-     AC_LINK_IFELSE([AC_LANG_SOURCE(
-         [@%:@include <boost/test/unit_test.hpp>
-          @%:@include <boost/timer/timer.hpp>
-          using namespace boost::unit_test_framework;
-          test_suite*
-          init_unit_test_suite(int argc, char** argv)
-          {
-              boost::timer::auto_cpu_timer t;
-              return (test_suite*) 0;
-          }
-         ])],
-         [boost_unit_found=$boost_libs
-          boost_defines=""
-          break],
-         [])
-     # shared version
-     CXXFLAGS="$ql_original_CXXFLAGS -DBOOST_TEST_MAIN -DBOOST_TEST_DYN_LINK"
-     boost_unit_found=no
-     AC_LINK_IFELSE([AC_LANG_SOURCE(
-         [@%:@include <boost/test/unit_test.hpp>
-          @%:@include <boost/timer/timer.hpp>
-          using namespace boost::unit_test_framework;
-          test_suite*
-          init_unit_test_suite(int argc, char** argv)
-          {
-              boost::timer::auto_cpu_timer t;
               return (test_suite*) 0;
           }
          ])],
@@ -248,9 +175,9 @@ AC_DEFUN([QL_CHECK_BOOST_TEST_THREAD_SIGNALS2_SYSTEM],
  ql_original_CXXFLAGS=$CXXFLAGS
  CC_BASENAME=`basename $CC`
  CC_VERSION=`echo "__GNUC__ __GNUC_MINOR__" | $CC -E -x c - | tail -n 1 | $SED -e "s/ //"`
- for suffix in "-$CC_BASENAME$CC_VERSION" \
+ for suffix in "" \
+               "-$CC_BASENAME$CC_VERSION" \
                "-$CC_BASENAME" \
-               "" \
                "-mt-$CC_BASENAME$CC_VERSION" \
                "-$CC_BASENAME$CC_VERSION-mt" \
                "-x$CC_BASENAME$CC_VERSION-mt" \

@@ -87,28 +87,26 @@ namespace QuantLib {
         //! \name Constructors
         //@{
         //! reference date based on current evaluation date
-        FittedBondDiscountCurve(
-                 Natural settlementDays,
-                 const Calendar& calendar,
-                 const std::vector<ext::shared_ptr<BondHelper> >& bonds,
-                 const DayCounter& dayCounter,
-                 const FittingMethod& fittingMethod,
-                 Real accuracy = 1.0e-10,
-                 Size maxEvaluations = 10000,
-                 const Array& guess = Array(),
-                 Real simplexLambda = 1.0,
-                 Size maxStationaryStateIterations = 100);
+        FittedBondDiscountCurve(Natural settlementDays,
+                                const Calendar& calendar,
+                                std::vector<ext::shared_ptr<BondHelper> > bonds,
+                                const DayCounter& dayCounter,
+                                const FittingMethod& fittingMethod,
+                                Real accuracy = 1.0e-10,
+                                Size maxEvaluations = 10000,
+                                Array guess = Array(),
+                                Real simplexLambda = 1.0,
+                                Size maxStationaryStateIterations = 100);
         //! curve reference date fixed for life of curve
-        FittedBondDiscountCurve(
-                 const Date &referenceDate,
-                 const std::vector<ext::shared_ptr<BondHelper> >& bonds,
-                 const DayCounter& dayCounter,
-                 const FittingMethod& fittingMethod,
-                 Real accuracy = 1.0e-10,
-                 Size maxEvaluations = 10000,
-                 const Array &guess = Array(),
-                 Real simplexLambda = 1.0,
-                 Size maxStationaryStateIterations = 100);
+        FittedBondDiscountCurve(const Date& referenceDate,
+                                std::vector<ext::shared_ptr<BondHelper> > bonds,
+                                const DayCounter& dayCounter,
+                                const FittingMethod& fittingMethod,
+                                Real accuracy = 1.0e-10,
+                                Size maxEvaluations = 10000,
+                                Array guess = Array(),
+                                Real simplexLambda = 1.0,
+                                Size maxStationaryStateIterations = 100);
         //@}
 
         //! \name Inspectors
@@ -116,20 +114,20 @@ namespace QuantLib {
         //! total number of bonds used to fit the yield curve
         Size numberOfBonds() const;
         //! the latest date for which the curve can return values
-        Date maxDate() const;
+        Date maxDate() const override;
         //! class holding the results of the fit
         const FittingMethod& fitResults() const;
         //@}
 
         //! \name Observer interface
         //@{
-        void update();
+        void update() override;
         //@}
 
       private:
         void setup();
-        void performCalculations() const;
-        DiscountFactor discountImpl(Time) const;
+        void performCalculations() const override;
+        DiscountFactor discountImpl(Time) const override;
         // target accuracy level to be used in the optimization routine
         Real accuracy_;
         // max number of evaluations to be used in the optimization routine
@@ -186,7 +184,7 @@ namespace QuantLib {
         // internal class
         class FittingCost;
       public:
-        virtual ~FittingMethod() {}
+        virtual ~FittingMethod() = default;
         //! total number of coefficients to fit/solve for
         virtual Size size() const = 0;
         //! output array of results of optimization problem
@@ -195,6 +193,8 @@ namespace QuantLib {
         Integer numberOfIterations() const;
         //! final value of cost function after optimization
         Real minimumCostValue() const;
+        //! error code of the optimization
+        EndCriteria::Type errorCode() const;
         //! clone of the current object
         #if defined(QL_USE_STD_UNIQUE_PTR)
         virtual std::unique_ptr<FittingMethod> clone() const = 0;
@@ -217,9 +217,9 @@ namespace QuantLib {
         //! constructors
         FittingMethod(bool constrainAtZero = true,
                       const Array& weights = Array(),
-                      const ext::shared_ptr<OptimizationMethod>& optimizationMethod =
+                      ext::shared_ptr<OptimizationMethod> optimizationMethod =
                           ext::shared_ptr<OptimizationMethod>(),
-                      const Array& l2 = Array(),
+                      Array l2 = Array(),
                       Real minCutoffTime = 0.0,
                       Real maxCutoffTime = QL_MAX_REAL);
         //! rerun every time instruments/referenceDate changes
@@ -255,6 +255,8 @@ namespace QuantLib {
         Integer numberOfIterations_;
         // final value for the minimized cost function
         Real costValue_;
+        // error code returned by OptimizationMethod::minimize()
+        EndCriteria::Type errorCode_ = EndCriteria::None;
         // optimization method to be used, if none provided use Simplex
         ext::shared_ptr<OptimizationMethod> optimizationMethod_;
         // flat extrapolation of instantaneous forward before / after cutoff
@@ -285,8 +287,8 @@ namespace QuantLib {
     }
 
     inline void FittedBondDiscountCurve::setup() {
-        for (Size i=0; i<bondHelpers_.size(); ++i)
-            registerWith(bondHelpers_[i]);
+        for (auto& bondHelper : bondHelpers_)
+            registerWith(bondHelper);
     }
 
     inline DiscountFactor FittedBondDiscountCurve::discountImpl(Time t) const {
@@ -302,6 +304,11 @@ namespace QuantLib {
     inline
     Real FittedBondDiscountCurve::FittingMethod::minimumCostValue() const {
         return costValue_;
+    }
+
+    inline 
+    EndCriteria::Type FittedBondDiscountCurve::FittingMethod::errorCode() const {
+        return errorCode_;
     }
 
     inline Array FittedBondDiscountCurve::FittingMethod::solution() const {

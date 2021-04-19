@@ -168,7 +168,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="fdcir.cpp">
-          <Filter>Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="fdmlinearop.cpp">
       <Filter>Source Files</Filter>
@@ -353,6 +353,9 @@
     <ClCompile Include="schedule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="shortratemodels.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -472,6 +475,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="fittedbonddiscountcurve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ultimateforwardtermstructure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="crosscurrencyratehelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="subperiodcoupons.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -633,8 +645,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="fdcir.hpp">
-          <Filter>Header Files</Filter>
-        </ClInclude>
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="fdmlinearop.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -821,6 +833,9 @@
     <ClInclude Include="schedule.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="settings.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="shortratemodels.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -945,6 +960,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="fittedbonddiscountcurve.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ultimateforwardtermstructure.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="crosscurrencyratehelpers.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="subperiodcoupons.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
