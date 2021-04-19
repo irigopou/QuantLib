@@ -4334,6 +4334,27 @@
     <ClInclude Include="ql\math\integrals\exponentialintegrals.hpp">
       <Filter>math\integrals</Filter>
     </ClInclude>
+    <ClInclude Include="ql\termstructures\yield\oisratehelperDS.hpp">
+      <Filter>termstructures\yield</Filter>
+    </ClInclude>
+    <ClInclude Include="ql\cashflows\oicouponds.hpp">
+      <Filter>cashflows</Filter>
+    </ClInclude>
+    <ClInclude Include="ql\instruments\oiswapds.hpp">
+      <Filter>instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="ql\instruments\makeoiswapds.hpp">
+      <Filter>instruments</Filter>
+    </ClInclude>
+    <ClInclude Include="ql\indexes\oitermindexds.hpp">
+      <Filter>indexes</Filter>
+    </ClInclude>
+    <ClInclude Include="ql\indexes\oiswapindexds.hpp">
+      <Filter>indexes</Filter>
+    </ClInclude>
+    <ClInclude Include="ql\instruments\floatfloatswapds.hpp">
+      <Filter>instruments</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ql\methods\montecarlo\brownianbridge.cpp">
@@ -6999,6 +7020,27 @@
     </ClCompile>
     <ClCompile Include="ql\math\integrals\exponentialintegrals.cpp">
       <Filter>math\integrals</Filter>
+    </ClCompile>
+    <ClCompile Include="ql\termstructures\yield\oisratehelperDS.cpp">
+      <Filter>termstructures\yield</Filter>
+    </ClCompile>
+    <ClCompile Include="ql\cashflows\oicouponds.cpp">
+      <Filter>cashflows</Filter>
+    </ClCompile>
+    <ClCompile Include="ql\instruments\oiswapds.cpp">
+      <Filter>instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="ql\instruments\makeoiswapds.cpp">
+      <Filter>instruments</Filter>
+    </ClCompile>
+    <ClCompile Include="ql\indexes\oitermindexds.cpp">
+      <Filter>indexes</Filter>
+    </ClCompile>
+    <ClCompile Include="ql\indexes\oiswapindexds.cpp">
+      <Filter>indexes</Filter>
+    </ClCompile>
+    <ClCompile Include="ql\instruments\floatfloatswapds.cpp">
+      <Filter>instruments</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
