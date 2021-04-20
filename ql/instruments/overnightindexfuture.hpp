@@ -38,25 +38,15 @@ namespace QuantLib {
     */
     class OvernightIndexFuture : public Instrument {
       public:
-        enum NettingType { Averaging, Compounding };
 		enum Approximation { Telescopic, Takada, None };//added by Deriscope
 
-        OvernightIndexFuture(const ext::shared_ptr<OvernightIndex>& overnightIndex,
-                             const ext::shared_ptr<Payoff>& payoff,
-                             const Date& valueDate,
-                             const Date& maturityDate,
-                             const Handle<YieldTermStructure>& discountCurve,
-                             const Handle<Quote>& convexityAdjustment = Handle<Quote>(),
-                             const NettingType subPeriodsNettingType = Compounding,
-							 const Approximation approx = None);
-
-        //! returns spot value/price of an underlying financial instrument
-        virtual Real spotValue() const;
-
-        //! NPV of income/dividends/storage-costs etc. of underlying instrument
-        virtual Real spotIncome(const Handle<YieldTermStructure>&) const;
-
-        virtual Real forwardValue() const;
+        OvernightIndexFuture(
+            ext::shared_ptr<OvernightIndex> overnightIndex,
+            const Date& valueDate,
+            const Date& maturityDate,
+            Handle<Quote> convexityAdjustment = Handle<Quote>(),
+            RateAveraging::Type averagingMethod = RateAveraging::Compound,
+			const Approximation approx = None);
 
         Real convexityAdjustment() const;
         bool isExpired() const override;
@@ -68,7 +58,7 @@ namespace QuantLib {
         ext::shared_ptr<OvernightIndex> overnightIndex_;
         Date valueDate_, maturityDate_;
         Handle<Quote> convexityAdjustment_;
-        NettingType subPeriodsNettingType_;
+        RateAveraging::Type averagingMethod_;
 		Approximation approx_;//added by Deriscope
     };
 

@@ -29,10 +29,14 @@ namespace QuantLib {
                                                const Date& valueDate,
                                                const Date& maturityDate,
                                                Handle<Quote> convexityAdjustment,
-                                               RateAveraging::Type averagingMethod)
+                                               RateAveraging::Type averagingMethod,
+                                               const Approximation approx)
     : overnightIndex_(std::move(overnightIndex)), valueDate_(valueDate),
       maturityDate_(maturityDate), convexityAdjustment_(std::move(convexityAdjustment)),
-      averagingMethod_(averagingMethod) {
+      averagingMethod_(averagingMethod), approx_(approx) {
+		QL_REQUIRE((averagingMethod == RateAveraging::Simple && approx_ != Telescopic) || 
+			(averagingMethod == RateAveraging::Compound && approx_ != Takada), 
+			"invalid combination of RateAveraging and Approximation inputs in construction of OvernightIndexFuture");
         QL_REQUIRE(overnightIndex_, "null overnight index");
         registerWith(overnightIndex_);
     }
@@ -54,7 +58,14 @@ namespace QuantLib {
                 QL_REQUIRE(fwd != Null<Real>(), "missing rate on " <<
                     d1 << " for index " << overnightIndex_->name());
             } else {
-                fwd = forwardCurve->forwardRate(d1, d2, dayCounter, Simple).rate();
+				if(approx_== Takada) {//added by Deriscope
+					DiscountFactor startDiscount = forwardCurve->discount(d1);
+					DiscountFactor endDiscount = forwardCurve->discount(maturityDate_);
+					avg += log(startDiscount / endDiscount);
+					break;
+				}
+				else
+                    fwd = forwardCurve->forwardRate(d1, d2, dayCounter, Simple).rate();
             }
             avg += fwd * dayCounter.yearFraction(d1, d2);
             d1 = d2;
@@ -88,11 +99,22 @@ namespace QuantLib {
                 d1 = d2;
             }
         }
-        DiscountFactor forwardDiscount = forwardCurve->discount(maturityDate_);
-        if (valueDate_ > today) {
-            forwardDiscount /= forwardCurve->discount(valueDate_);
+        if (approx_ == Telescopic) {//Deriscope: Enclosed the code below inside if because it corresponds to Telescopic
+            DiscountFactor forwardDiscount = forwardCurve->discount(maturityDate_);
+            if (valueDate_ > today) {
+                forwardDiscount /= forwardCurve->discount(valueDate_);
+            }
+            prod /= forwardDiscount;
         }
-        prod /= forwardDiscount;
+		else {//added by Deriscope
+			Date d1 = std::max(today, valueDate_);
+			while (d1 < maturityDate_) {
+				Date d2 = calendar.advance(d1, 1, Days);
+				Real r = forwardCurve->forwardRate(d1, d2, dayCounter, Simple).rate();
+                prod *= 1 + r * dayCounter.yearFraction(d1, d2);
+                d1 = d2;
+			}
+		}
 
         return (prod - 1) / dayCounter.yearFraction(valueDate_, maturityDate_);
     }
