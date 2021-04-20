@@ -847,10 +847,10 @@ namespace QuantLib {
 			//The following 2 lines were commented out and replaced with the next 2 lines by me
 //            DiscountFactor b = y.discountFactor(getStepwiseDiscountTime(leg[i], dc, npvDate, lastDate));
 //            discount *= b;
-			t += getStepwiseDiscountTime(leg[i], dc, npvDate, lastDate);//******* added by me
+			t += getStepwiseDiscountTime(i, dc, npvDate, lastDate);//******* added by me
 			DiscountFactor discount = y.discountFactor(t);
 			//********************************************************************************************************************
-            lastDate = leg[i]->date();
+            lastDate = i->date();
 
             npv += amount * discount;
         }
