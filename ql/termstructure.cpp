@@ -53,6 +53,8 @@ namespace QuantLib {
 			histHorDate_ = referenceDate_;
             updated_ = true;
         }
+        if( histHorDate_ == Date() )
+            histHorDate_ = referenceDate_;
         return histHorDate_;
 	}
 
