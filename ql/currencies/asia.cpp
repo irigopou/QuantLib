@@ -52,6 +52,19 @@ namespace QuantLib {
         data_ = cnyData;
     }
 
+    // Georgian lari
+    /* The ISO three-letter code is GEL; the numeric code is 4217.
+        It is divided in 100 tetri.
+    */
+    GELCurrency::GELCurrency() {
+        static ext::shared_ptr<Data> gelData(
+                                      new Data("Georgian lari", "GEL", 4217,
+                                               "GL", "", 100,
+                                               Rounding(),
+                                               "%3% %1$.2f"));
+        data_ = gelData;
+    }
+
     // Hong Kong dollar
     /* The ISO three-letter code is HKD; the numeric code is 344.
       It is divided in 100 cents.
