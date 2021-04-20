@@ -512,7 +512,6 @@
     <ClInclude Include="ql\cashflows\couponpricer.hpp" />
     <ClInclude Include="ql\cashflows\cpicoupon.hpp" />
     <ClInclude Include="ql\cashflows\cpicouponpricer.hpp" />
-    <ClInclude Include="ql\cashflows\oicouponds.hpp" />
     <ClInclude Include="ql\cashflows\digitalcmscoupon.hpp" />
     <ClInclude Include="ql\cashflows\digitalcoupon.hpp" />
     <ClInclude Include="ql\cashflows\digitaliborcoupon.hpp" />
@@ -525,6 +524,7 @@
     <ClInclude Include="ql\cashflows\inflationcoupon.hpp" />
     <ClInclude Include="ql\cashflows\inflationcouponpricer.hpp" />
     <ClInclude Include="ql\cashflows\lineartsrpricer.hpp" />
+    <ClInclude Include="ql\cashflows\oicouponds.hpp" />
     <ClInclude Include="ql\cashflows\overnightindexedcoupon.hpp" />
     <ClInclude Include="ql\cashflows\rangeaccrual.hpp" />
     <ClInclude Include="ql\cashflows\rateaveraging.hpp" />
@@ -840,7 +840,6 @@
     <ClInclude Include="ql\experimental\volatility\zabrsmilesection.hpp" />
     <ClInclude Include="ql\indexes\all.hpp" />
     <ClInclude Include="ql\indexes\bmaindex.hpp" />
-    <ClInclude Include="ql\indexes\oitermindexds.hpp" />
     <ClInclude Include="ql\indexes\ibor\all.hpp" />
     <ClInclude Include="ql\indexes\ibor\aonia.hpp" />
     <ClInclude Include="ql\indexes\ibor\audlibor.hpp" />
@@ -886,6 +885,7 @@
     <ClInclude Include="ql\indexes\inflationindex.hpp" />
     <ClInclude Include="ql\indexes\interestrateindex.hpp" />
     <ClInclude Include="ql\indexes\oiswapindexds.hpp" />
+    <ClInclude Include="ql\indexes\oitermindexds.hpp" />
     <ClInclude Include="ql\indexes\region.hpp" />
     <ClInclude Include="ql\indexes\swap\all.hpp" />
     <ClInclude Include="ql\indexes\swap\chfliborswap.hpp" />
@@ -937,8 +937,8 @@
     <ClInclude Include="ql\instruments\makecapfloor.hpp" />
     <ClInclude Include="ql\instruments\makecds.hpp" />
     <ClInclude Include="ql\instruments\makecms.hpp" />
-    <ClInclude Include="ql\instruments\makeoiswapds.hpp" />
     <ClInclude Include="ql\instruments\makeois.hpp" />
+    <ClInclude Include="ql\instruments\makeoiswapds.hpp" />
     <ClInclude Include="ql\instruments\makeswaption.hpp" />
     <ClInclude Include="ql\instruments\makevanillaswap.hpp" />
     <ClInclude Include="ql\instruments\makeyoyinflationcapfloor.hpp" />
@@ -1891,7 +1891,6 @@
     <ClCompile Include="ql\cashflows\couponpricer.cpp" />
     <ClCompile Include="ql\cashflows\cpicoupon.cpp" />
     <ClCompile Include="ql\cashflows\cpicouponpricer.cpp" />
-    <ClCompile Include="ql\cashflows\oicouponds.cpp" />
     <ClCompile Include="ql\cashflows\digitalcmscoupon.cpp" />
     <ClCompile Include="ql\cashflows\digitalcoupon.cpp" />
     <ClCompile Include="ql\cashflows\digitaliborcoupon.cpp" />
@@ -1904,6 +1903,7 @@
     <ClCompile Include="ql\cashflows\inflationcoupon.cpp" />
     <ClCompile Include="ql\cashflows\inflationcouponpricer.cpp" />
     <ClCompile Include="ql\cashflows\lineartsrpricer.cpp" />
+    <ClCompile Include="ql\cashflows\oicouponds.cpp" />
     <ClCompile Include="ql\cashflows\overnightindexedcoupon.cpp" />
     <ClCompile Include="ql\cashflows\rangeaccrual.cpp" />
     <ClCompile Include="ql\cashflows\replication.cpp" />
@@ -2125,7 +2125,6 @@
     <ClCompile Include="ql\experimental\volatility\volcube.cpp" />
     <ClCompile Include="ql\experimental\volatility\zabr.cpp" />
     <ClCompile Include="ql\indexes\bmaindex.cpp" />
-    <ClCompile Include="ql\indexes\oitermindexds.cpp" />
     <ClCompile Include="ql\indexes\ibor\bibor.cpp" />
     <ClCompile Include="ql\indexes\ibor\eonia.cpp" />
     <ClCompile Include="ql\indexes\ibor\euribor.cpp" />
@@ -2140,6 +2139,7 @@
     <ClCompile Include="ql\indexes\inflationindex.cpp" />
     <ClCompile Include="ql\indexes\interestrateindex.cpp" />
     <ClCompile Include="ql\indexes\oiswapindexds.cpp" />
+    <ClCompile Include="ql\indexes\oitermindexds.cpp" />
     <ClCompile Include="ql\indexes\region.cpp" />
     <ClCompile Include="ql\indexes\swap\chfliborswap.cpp" />
     <ClCompile Include="ql\indexes\swap\euriborswap.cpp" />
@@ -2186,8 +2186,8 @@
     <ClCompile Include="ql\instruments\makecapfloor.cpp" />
     <ClCompile Include="ql\instruments\makecds.cpp" />
     <ClCompile Include="ql\instruments\makecms.cpp" />
-    <ClCompile Include="ql\instruments\makeoiswapds.cpp" />
     <ClCompile Include="ql\instruments\makeois.cpp" />
+    <ClCompile Include="ql\instruments\makeoiswapds.cpp" />
     <ClCompile Include="ql\instruments\makeswaption.cpp" />
     <ClCompile Include="ql\instruments\makevanillaswap.cpp" />
     <ClCompile Include="ql\instruments\makeyoyinflationcapfloor.cpp" />
