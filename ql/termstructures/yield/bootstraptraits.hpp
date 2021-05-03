@@ -164,7 +164,10 @@ namespace QuantLib {
             }
             // no constraints.
             // We choose as min a value very unlikely to be exceeded.
-            return -detail::maxRate;
+			//****Deriscope
+            //return -detail::maxRate;//replaced with the next 2 lines to avoid using negative rate when the acting interpolation cannot handle it
+			bool allowsPositiveRatesOnly = TypesAreEqual<typename C::interpolator_type,LogLinear>::Yes || TypesAreEqual<typename C::interpolator_type,LogCubic>::Yes;
+            return allowsPositiveRatesOnly ? QL_EPSILON : -detail::maxRate;
         }
         template <class C>
         static Real maxValueAfter(Size,
@@ -329,7 +332,10 @@ namespace QuantLib {
             } else {
                 // no constraints.
                 // We choose as min a value very unlikely to be exceeded.
-                result = -detail::maxRate;
+			    //****Deriscope
+                //return -detail::maxRate;//replaced with the next 2 lines to avoid using negative rate when the acting interpolation cannot handle it
+			    bool allowsPositiveRatesOnly = TypesAreEqual<typename C::interpolator_type,LogLinear>::Yes || TypesAreEqual<typename C::interpolator_type,LogCubic>::Yes;
+                return allowsPositiveRatesOnly ? QL_EPSILON : -detail::maxRate;
             }
             Real t = c->timeFromReference(c->dates()[i]);
             return std::max(result, -1.0 / t + 1E-8);
