@@ -52,7 +52,9 @@ namespace QuantLib {
 		//The effect of this change is that historical data are being read as long as fixingDate_ < today, where today is now returned by getHistHorDate()
 		//The GUI has previously set the respective date inside the referenced TermStructure by calling the new TermStructure method setHistHorDate() 
 		//Date today = Settings::instance().evaluationDate();
-		Date const & today = index->forwardingTermStructure()->getHistHorDate();
+        Handle<YieldTermStructure> curve = index->forwardingTermStructure();
+        QL_REQUIRE(!curve.empty(), "null term structure set to this instance of " << index->name());
+		Date const & today = curve->getHistHorDate();
 		//********************************************************************************
         while (i < n && fixingDates[i] < today) {
             // rate must have been fixed
@@ -88,12 +90,6 @@ namespace QuantLib {
         to avoid the evaluation of multiple forward fixings
         (approximation proposed by Katsumi Takada)*/
         if (byApprox_ && i < n) {
-            Handle<YieldTermStructure> curve =
-                index->forwardingTermStructure();
-            QL_REQUIRE(!curve.empty(),
-                "null term structure set to this instance of " <<
-                index->name());
-
             const vector<Date>& dates = coupon_->valueDates();
             DiscountFactor startDiscount = curve->discount(dates[i]);
             DiscountFactor endDiscount = curve->discount(dates[n]);
@@ -106,12 +102,6 @@ namespace QuantLib {
         }
         // otherwise
         else if (i < n){
-            Handle<YieldTermStructure> curve =
-                index->forwardingTermStructure();
-            QL_REQUIRE(!curve.empty(),
-                "null term structure set to this instance of " <<
-                index->name());
-
             const vector<Date>& dates = coupon_->valueDates();
             Time te = curve->timeFromReference(dates[n]);
             while (i < n) {
