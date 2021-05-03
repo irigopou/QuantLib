@@ -59,7 +59,9 @@ namespace QuantLib {
 				//The effect of this change is that historical data are being read as long as fixingDate_ < today, where today is now returned by getHistHorDate()
 				//The GUI has previously set the respective date inside the referenced TermStructure by calling the new TermStructure method setHistHorDate() 
 				//Date today = Settings::instance().evaluationDate();
-				Date const & today = index->forwardingTermStructure()->getHistHorDate();
+                Handle<YieldTermStructure> curve = index->forwardingTermStructure();
+                QL_REQUIRE(!curve.empty(), "null term structure set to this instance of " << index->name());
+				Date const & today = curve->getHistHorDate();
 				//********************************************************************************
                 while (i<n && fixingDates[i]<today) {
                     // rate must have been fixed

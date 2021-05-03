@@ -35,7 +35,9 @@ namespace QuantLib {
                 Real avg = 0.0;//used only if isComp = false
 
                 // already fixed part
-				Date const & today = index->forwardingTermStructure()->getHistHorDate();
+                Handle<YieldTermStructure> curve = index->forwardingTermStructure();
+                QL_REQUIRE(!curve.empty(), "null term structure set to this instance of " << index->name());
+				Date const & today = curve->getHistHorDate();
                 while (i<n && fixingDates[std::min(i, nMax)]<today) {
                     // rate must have been fixed
                     Rate pastFixing = IndexManager::instance().getHistory(
@@ -73,9 +75,6 @@ namespace QuantLib {
                 // forward part using telescopic property in order
                 // to avoid the evaluation of multiple forward fixings
                 if (i<n) {
-                    Handle<YieldTermStructure> curve = index->forwardingTermStructure();
-                    QL_REQUIRE(!curve.empty(), "null term structure set to this instance of " << index->name());
-
 					if( isComp || approxOI == OiSwapIndexDS::TakadaOI ) {
 						const vector<Date>& dates = coupon_->valueDates();//number of value dates = n+1 because the last value date is needed for defining the last overnight accrual period
 						//The dates reflect the approxOI. If the latter is telescopic => there will be only a few date elements as set in the OvernightIndexedCoupon constructor
