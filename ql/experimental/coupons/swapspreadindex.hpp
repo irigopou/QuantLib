@@ -47,8 +47,8 @@ namespace QuantLib {
 
         //! \name Inspectors
         //@{
-        ext::shared_ptr<SwapIndex> swapIndex1() { return swapIndex1_; }
-        ext::shared_ptr<SwapIndex> swapIndex2() { return swapIndex2_; }
+        ext::shared_ptr<SwapIndex> const & swapIndex1() const { return swapIndex1_; }//DERISCOPE: Added const & and const
+        ext::shared_ptr<SwapIndex> const & swapIndex2() const { return swapIndex2_; }//DERISCOPE: Added const & and const
         Real gearing1() const { return gearing1_; }
         Real gearing2() const { return gearing2_; }
         //@}
